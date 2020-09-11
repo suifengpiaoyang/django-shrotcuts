@@ -4,7 +4,6 @@ import shutil
 import argparse
 
 # 切换到 manage.py 路径下，运行此脚本。
-# 在使用 python manage.py startapp [appname] 之后运行是最好的时机
 
 add_flag = ["all", "forms", "urls", "templates", "static"]
 
