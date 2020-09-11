@@ -23,24 +23,32 @@ def generate_file(path):
         print('Generate {} successfully.'.format(path))
 
 
-def generate_file_from_template(path, flag, app_name):
-    if not check_exists(path):
+def generate_file_from_template(app_path, templates_path, flag, app_name):
+    generate_file_name = '{}.py'.format(flag)
+    templates_file_path = os.path.join(templates_path, generate_file_name)
+    generate_file_path = os.path.join(app_path, generate_file_name)
+    if not check_exists(generate_file_path):
         if flag == 'forms':
-            shutil.copy('./files/forms.py', path)
+            shutil.copy(templates_file_path, generate_file_path)
         elif flag == 'urls':
-            with open('./files/urls.py')as fl:
+            with open(templates_file_path)as fl:
                 data = fl.read().replace('{{ app_name }}', app_name)
-            with open(path, 'w', encoding='utf-8')as fl:
+            with open(generate_file_path, 'w', encoding='utf-8')as fl:
                 fl.write(data)
-        print('Generate {} successfully.'.format(path))
+        print('Generate {} successfully.'.format(generate_file_path))
 
 
 def add_files(flag, file=None):
     current_path = os.path.abspath('.')
+    execute_file = sys.executable
+    execute_path = os.path.dirname(execute_file)
     app_path = os.path.join(current_path, args.app)
+    if execute_file.endswith('python.exe'):
+        templates_path = os.path.join(current_path, 'files')
+    else:
+        templates_path = os.path.join(execute_path, 'files')
     if flag in ('forms', 'urls'):
-        file_path = os.path.join(app_path, '{}.py'.format(flag))
-        generate_file_from_template(file_path, flag, args.app)
+        generate_file_from_template(app_path, templates_path, flag, args.app)
     elif flag in ('templates', 'static'):
         target_path = os.path.join(app_path, flag, args.app)
         if not os.path.exists(target_path):
